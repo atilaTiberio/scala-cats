@@ -1,0 +1,59 @@
+Monoid must be compliant with
+  * Associative Law
+  * Identity Law
+
+Semigroup: It's the combine part of a Monoid without the empty
+
+Functors -> Special cases as Monads, applicative functors
+  Functors a map function is involved
+    We should think of map not as an iteration pattern, but as a way of sequencing computations on values ignoring some complication dictated by the relevant data type:
+    Futures: on futures we don't know about the internal state but we know the order our functions will be called
+
+Cats Effect: IO Type solves these problmes (Working with Futures)
+
+Formally, a functor is a type F[A] with an operation map with type (A => B) => F[B]
+
+package cats
+
+trait Functor[F[_]] {
+  def map[A, B](fa: F[A])(f: A => B): F[B]
+}
+
+If you haven’t seen syntax like F[_] before, it’s time to take a brief detour to discuss type constructors and higher kinded types.
+In Scala we declare type constructors using underscores. This specifies how many “holes” the type constructor has. However, to use them we refer to just the name.
+
+  Functor Laws
+    Functors guarantee the same semantics whether we sequence many small operations one by one, or combine them into a larger function before mapping.
+    To ensure this is the case the following laws must hold:
+
+    Identity: calling map with the identity function is the same as doing nothing:
+      fa.map(a => a) == fa
+
+    Composition: mapping with two functions f and g is the same as mapping with f and then mapping with g:
+      fa.map(g(f(_))) == fa.map(f).map(g)
+
+Contramap:
+  The contramap method only makes sense for data types that represent trans‐ formations. For example,
+  we can’t define contramap for an Option because there is no way of feeding a value in an Option[B] backwards through a function A => B.
+
+* Regular covariant Functors,with their map method,represent the ability to apply functions to a value in some context.
+  Successive calls to map apply these functions in sequence, each accepting the result of its predecessor as a parameter.
+* Contravariant functors,with their contra map method, represent the ability to “prepend” functions to a function‐like context.
+  Successive calls to contramap sequence these functions in the opposite order to map.
+* Invariant functors, with their imap method, represent bidirectional transformations.
+
+Functors form a foundational building block of several more interesting abstractions that we use all the time.
+  (Mondas are also Functors)
+
+MONADS
+
+Anything with a constructor and a flatMap method. A monad is a mechanism for sequencing computations even for intermediate complications (Using flatMap)
+Monads are all about sequencing
+  ** pure: abstracts over constructors, providing a way to create a new monadic context from a plain value.
+  ** flatMap: provides the sequencing step without worrying type issues
+
+  Either: See code
+  MonadError abstracts over Either-like, two most important methods of MonadError are raiseError(is like pure)  and handleErrorWith (Consume an error and
+  possibly turn it into a success
+Eval pg 104
+We’ve also seen some of the custom types and data structures that Cats pro‐ vides, including Id, Reader, Writer, and State. These cover a wide range of use cases.
