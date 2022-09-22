@@ -57,3 +57,17 @@ Monads are all about sequencing
   possibly turn it into a success
 Eval pg 104
 We’ve also seen some of the custom types and data structures that Cats pro‐ vides, including Id, Reader, Writer, and State. These cover a wide range of use cases.
+
+Composing monads, Transformative Example
+
+The main concepts we have to cover to understand monad transformers are:
+    • the available transformer classes;
+    • how to build stacks of monads using transformers;
+    • how to construct instances of a monad stack; and
+    • how to pull apart a stack to access the wrapped monads.
+
+type ListOption[A] = OptionT[List, A] // -> List[Option[A]]
+
+Semigroupal Laws
+    There is only one law for Semigroupal: the product method must be associative.
+    product(a, product(b, c)) == product(product(a, b), c)
